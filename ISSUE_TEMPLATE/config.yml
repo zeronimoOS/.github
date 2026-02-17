@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔒 보안 취약점 비공개 보고
+    url: https://github.com/zeronimoOS/.github/security/advisories/new
+    about: 보안 취약점은 반드시 비공개로 보고해주세요
+  - name: 📖 CONTRIBUTING.md
+    url: https://github.com/zeronimoOS/.github/blob/main/CONTRIBUTING.md
+    about: 기여 방법과 개발 워크플로우를 확인하세요
