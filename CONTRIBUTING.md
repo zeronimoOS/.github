@@ -128,3 +128,23 @@ git checkout -b feat/my-feature
 
 - **Issues**: [GitHub Issues](https://github.com/zeronimoOS)
 - **Security**: [SECURITY.md](SECURITY.md) 참조
+
+---
+
+## 6. AI-Assisted Development
+
+이 프로젝트는 AI 도구(Claude, Codex 등)를 적극 활용합니다.
+
+### 표기 규칙
+- AI 협업 커밋: `Co-Authored-By: Claude <model> <noreply@anthropic.com>` 트레일러 필수
+- AI 관련 이슈: `🤖 ai-assisted` 라벨 부여
+- 자동 생성 이슈: `📋 automated` 라벨 부여
+
+### AI 사용 범위
+- ✅ 코드 생성, 리팩토링, 테스트 작성, 문서화
+- ✅ 아키텍처 분석, 디버깅 보조
+- ⚠️ 보안 관련 코드는 AI 초안 + 인간 검증 필수
+- ❌ 비밀키/시드/인증정보 처리에 AI 직접 관여 금지
+
+### 참고
+- [ADR-008: AI-Native Development](https://github.com/zeronimoOS/zeronimo-os/blob/main/docs/architecture/decisions/adr-008-ai-native-development.md)
