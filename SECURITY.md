@@ -39,3 +39,29 @@
 - 취약점 확인 후 패치 개발
 - 패치 배포 후 90일 이내 공개 공시 (조율 가능)
 - 기여자는 CHANGELOG의 Security 섹션에 크레딧 표기
+
+---
+
+## Bitcoin Node 특화 보안 가이드
+
+### 개발자 필수 규칙
+
+- Bitcoin RPC 자격증명(`rpcuser`, `rpcpassword`)을 코드에 하드코딩 금지
+- `.env` 파일은 절대 커밋 금지 (`.gitignore` 확인)
+- 개인키/시드 처리 코드에 AI 직접 관여 금지
+- API 엔드포인트에 Bitcoin RPC를 직접 노출 금지 (반드시 Salon API를 통해서만)
+
+### 의존성 취약점 처리
+
+1. CVE 발견 시: **Private Vulnerability Report** 제출 (GitHub Security 탭)
+2. 의존성 업그레이드 PR 제출 시 커밋 타입 `security` 사용
+3. `bandit` MEDIUM 이상 경고는 `# nosec B###` + 사유 주석 필수
+
+### 보안 심각도 기준
+
+| 심각도 | 대응 시간 | 예시 |
+|--------|---------|------|
+| CRITICAL | 24시간 이내 | RPC 자격증명 노출, 인증 우회 |
+| HIGH | 72시간 이내 | CSRF 미검증, 헤더 스푸핑 |
+| MEDIUM | 7일 이내 | 정보 노출, 입력 미검증 |
+| LOW | 다음 릴리스 | 코드 품질, 로깅 개선 |
