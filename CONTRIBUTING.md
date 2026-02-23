@@ -148,3 +148,83 @@ git checkout -b feat/my-feature
 
 ### 참고
 - [ADR-008: AI-Native Development](https://github.com/zeronimoOS/zeronimo-os/blob/main/docs/architecture/decisions/adr-008-ai-native-development.md)
+
+---
+
+## 7. 로컬 개발 환경 설정
+
+### 사전 요구사항
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) 패키지 매니저 (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
+- Docker (컨테이너 테스트용)
+
+### 코드 품질 체크 (PR 전 필수)
+
+```bash
+uvx ruff check .           # 린트
+uvx ruff format --check .  # 포맷
+uv run mypy .              # 타입 체크
+uvx bandit -r . -ll        # 보안 스캔 (MEDIUM 이상)
+uv run pytest tests/ -m "not integration and not slow"  # 단위 테스트
+```
+
+---
+
+## 8. 아키텍처 규칙
+
+### DI 패턴 (Salon FastAPI 라우터 필수)
+
+모든 Salon FastAPI 라우터는 전역 인스턴스 직접 접근 금지. 반드시 `Depends()`로 주입:
+
+```python
+# ❌ 금지 — 전역 인스턴스 직접 접근
+bitcoin_client = BitcoinClient()  # 전역 생성 금지
+
+@router.get("/info")
+async def get_info():
+    return bitcoin_client.get_info()  # 직접 접근 금지
+
+
+# ✅ 올바른 패턴 — Depends() 의존성 주입
+@router.get("/info")
+async def get_info(bitcoin: BitcoinClient = Depends(get_bitcoin_client)):
+    return bitcoin.get_info()
+```
+
+### 네이밍 규칙
+
+| 컨텍스트 | 규칙 | 예시 |
+|---------|------|------|
+| 소프트웨어/서비스 | Zeronimo | zeronimo-os, zeronimo-ui |
+| 하드웨어/기기 | Nodin | nodin.local, Nodin Pro |
+| 금지 식별자 | `bitcoin-core-app` | ❌ 절대 사용 금지 |
+| 금지 하드코딩 경로 | `/opt/zeronimo/` | ❌ 환경변수로 대체 |
+
+### PyQt5 ARM64 주의사항 (zeronimo-ui)
+
+ODROID ARM64에서 `pyqtSignal` 3개 이상 파라미터 조합이 QML 연동 시 SEGV 유발:
+
+```python
+# ❌ SEGV 유발 — 3개 이상 파라미터
+status_changed = pyqtSignal(str, int, str)
+
+# ✅ 올바른 패턴 — QVariant + dict
+from PyQt5.QtCore import QVariant
+status_changed = pyqtSignal(QVariant)
+# 호출: self.status_changed.emit({"status": s, "code": n, "msg": m})
+```
+
+---
+
+## 9. PR 체크리스트
+
+PR 생성 전 반드시 확인:
+
+- [ ] `uvx ruff check .` 통과
+- [ ] `uvx ruff format --check .` 통과
+- [ ] `uv run mypy .` 통과 (또는 `# type: ignore` 사유 주석 명시)
+- [ ] 새 기능: 테스트 파일 추가 (`tests/test_*.py`)
+- [ ] FastAPI 라우터: DI 패턴 준수 (`Depends()` 사용)
+- [ ] 네이밍 규칙 준수 (Nodin/Zeronimo 구분, 금지 식별자 없음)
+- [ ] CI 전체 통과 확인 (GitHub Actions 탭)
+- [ ] `bandit` MEDIUM 이상 경고 시 `# nosec B###` + 사유 주석 필수
