@@ -1,43 +1,25 @@
 # ZeronimoOS
 
-Bitcoin full node device **Nodin** — OS and application ecosystem.
+Bitcoin full node device **Nodin** — sovereign computing made simple.
 
-Built for sovereignty. Designed for simplicity.
-
----
-
-## Getting Started
-
-New to the project? Start here:
-
-1. **[`zeronimo-os`](https://github.com/zeronimoOS/zeronimo-os)** — Read the README and AGENTS.md first
-2. **[`zeronimo-appstore`](https://github.com/zeronimoOS/zeronimo-appstore)** — Understand the app packaging standard
-3. Pick a repo below based on what you want to work on
-
----
-
-## Repository Map
-
-### Core OS
+## Repositories
 
 | Repo | Description |
 |------|-------------|
-| [`zeronimo-os`](https://github.com/zeronimoOS/zeronimo-os) | Main OS: Salon API, zeronimo-ui, fanboy, Incus config |
-| [`zeronimo-design-system`](https://github.com/zeronimoOS/zeronimo-design-system) | QML component library (Qt 5.15, EGLFS, ARM64) |
+| [`zeronimo-os`](https://github.com/zeronimoOS/zeronimo-os) | Nodin OS monorepo — Salon API, zeronimo-ui, zeronimo-web, fanboy, Incus containers, deploy scripts |
+| [`openclaw-bot`](https://github.com/zeronimoOS/openclaw-bot) | AI research assistant Telegram bot for Bitcoin ecosystem analysis |
+| [`bitqna`](https://github.com/zeronimoOS/bitqna) | Bitcoin knowledge RAG chatbot powered by FastAPI |
 
-### Bitcoin Apps
+## Architecture
 
-| Repo | Description |
-|------|-------------|
-| [`bitcoin-node-app`](https://github.com/zeronimoOS/bitcoin-node-app) | Bitcoin Core app package (install.sh + manifest) |
-| [`eps-app`](https://github.com/zeronimoOS/eps-app) | Electrum Personal Server app package |
+Nodin runs on ODROID-M1S with a container-based architecture (Incus):
 
-### Platform
+- **Core containers**: bitcoind, Salon (REST API), EPS (Electrum Personal Server)
+- **Host services**: zeronimo-ui (QML touch), zeronimo-web (React dashboard), fanboy (fan control)
+- **Access**: Local touch UI, LAN web dashboard, Tor remote access
 
-| Repo | Description |
-|------|-------------|
-| [`zeronimo-appstore`](https://github.com/zeronimoOS/zeronimo-appstore) | App marketplace registry + manifest schema |
+All product code lives in the [`zeronimo-os`](https://github.com/zeronimoOS/zeronimo-os) monorepo.
 
 ---
 
-> Each repository has an `AGENTS.md` with context for AI tools and new developers.
+> Each repository has an `AGENTS.md` with context for AI tools and contributors.
